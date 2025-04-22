@@ -1,0 +1,1 @@
+CREATE INDEX idx_suppliers_risk ON supply_chain.suppliers(risk_level, risk_score);

@@ -1,0 +1,11 @@
+-- INSERT INTO suppliers (name, country, industry, risk_score, risk_level, created_at, updated_at)
+-- VALUES
+--     ('ElectroParts Co', 'China', 'Electronics', 15.0, 'LOW', NOW(), NOW()),
+--     ('AutoSupplies GmbH', 'Germany', 'Automotive', 65.0, 'HIGH', NOW(), NOW()),
+--     ('TextileMakers Ltd', 'Bangladesh', 'Apparel', 30.0, 'MEDIUM', NOW(), NOW());
+--
+-- INSERT INTO risk_events (supplier_id, event_type, severity, source, description, detected_at, location)
+-- VALUES
+--     (2, 'Labor Strike', 40.0, 'News API', 'Workers strike at main factory', NOW() - INTERVAL '2 days', 'Berlin'),
+--     (2, 'Supply Delay', 25.0, 'ERP System', 'Component delivery delayed by 2 weeks', NOW() - INTERVAL '1 day', 'Munich'),
+--     (3, 'Flood Alert', 30.0, 'Weather Service', 'Major flooding near factory district', NOW(), 'Dhaka');
