@@ -16,7 +16,7 @@ services:
       POSTGRES_PORT: 5434
       POSTGRES_USER: postgres
       POSTGRES_DB: risk-management
-      
+
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1

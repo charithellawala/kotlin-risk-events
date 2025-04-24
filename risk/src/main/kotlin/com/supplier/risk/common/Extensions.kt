@@ -30,7 +30,7 @@ fun SupplierDto.toSupplierEntity() = Supplier(
 
 fun List<Supplier>.toDtoList() = this.map { it.toDto() }
 
-fun RiskEvent.toDto() = RiskEventDto(
+fun RiskEvent.toEventDto() = RiskEventDto(
     id = id!!,
     supplierId = supplier.id!!,
     eventType = eventType,
@@ -42,4 +42,4 @@ fun RiskEvent.toDto() = RiskEventDto(
 )
 
 
-fun List<RiskEvent>.toDtoRiskEvenList() = this.map { it.toDto() }
+fun List<RiskEvent>.toDtoRiskEvenList() = this.map { it.toEventDto() }

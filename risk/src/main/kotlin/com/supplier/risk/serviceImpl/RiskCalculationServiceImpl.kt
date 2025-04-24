@@ -1,18 +1,27 @@
 package com.supplier.risk.serviceImpl
 
 import com.supplier.risk.common.RiskLevel
+import com.supplier.risk.common.toDto
+import com.supplier.risk.common.toDtoList
+import com.supplier.risk.common.toEventDto
+import com.supplier.risk.dao.RiskEventDto
 import com.supplier.risk.dao.SupplierDto
 import com.supplier.risk.model.RiskEvent
 import com.supplier.risk.model.Supplier
+import com.supplier.risk.repository.RiskEventRepository
 import com.supplier.risk.repository.SupplierRepository
+import com.supplier.risk.service.RiskCalculationService
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 @Service
-class RiskCalculationServiceImpl (private val supplierRepository: SupplierRepository) {
+class RiskCalculationServiceImpl(
+    private val supplierRepository: SupplierRepository,
+    private val riskEventRepository: RiskEventRepository
+) : RiskCalculationService {
 
     fun calculateRiskScore(events: List<RiskEvent>): Double {
         return events.sumOf { it.severity } * when (events.size) {
@@ -32,8 +41,8 @@ class RiskCalculationServiceImpl (private val supplierRepository: SupplierReposi
     }
 
 
-@Transactional
-  fun updateSupplierRisk(supplierId: Long) {
+    @Transactional
+    override fun updateSupplierRisk(supplierId: Long) {
         val supplier = supplierRepository.findById(supplierId).orElseThrow {
             EntityNotFoundException("Supplier not found with id $supplierId")
         }
@@ -48,11 +57,32 @@ class RiskCalculationServiceImpl (private val supplierRepository: SupplierReposi
     }
 
 
-    fun findAllSuppliers(): List<Supplier> {
+    override fun findAllSuppliers(): List<Supplier> {
         val suppliers = supplierRepository.findAll()
         return suppliers;
     }
 
+    override fun getHighestRiskSuppliers(): List<SupplierDto> {
+        val supplierList = supplierRepository.findByRiskLevel(RiskLevel.HIGH)
+            .plus(supplierRepository.findByRiskLevel(RiskLevel.CRITICAL))
+        return supplierList.toDtoList();
+    }
+
+    override fun getSupplierEventById(supplierId: Long): List<RiskEventDto> {
+        val events = riskEventRepository.findBySupplierId(supplierId).map { it.toEventDto() }
+        return events;
+    }
+
+    override fun getTopRiskSuppliers(): List<SupplierDto> {
+        val suppliers = supplierRepository.findHighestRiskSuppliers().map { it.toDto() }
+        return suppliers;
+    }
+
+    fun findRecentEvents(hours: Int): List<RiskEventDto> {
+        val since = Instant.now().minus(hours.toLong(), ChronoUnit.HOURS)
+        val events = riskEventRepository.findRecentEvents(since)
+        return events.map { it.toEventDto() }
+    }
 
 
 }
