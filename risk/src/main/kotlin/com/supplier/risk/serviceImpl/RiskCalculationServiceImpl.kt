@@ -63,6 +63,7 @@ class RiskCalculationServiceImpl(
     }
 
     override fun getHighestRiskSuppliers(): List<SupplierDto> {
+        System.out.println("sample commit");
         val supplierList = supplierRepository.findByRiskLevel(RiskLevel.HIGH)
             .plus(supplierRepository.findByRiskLevel(RiskLevel.CRITICAL))
         return supplierList.toDtoList();
